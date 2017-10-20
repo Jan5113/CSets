@@ -62,7 +62,7 @@ public class Main extends Application{
 		timer += dt;
 		if (timer > 0) {
 			iterations++;
-			timer -= 0.1;
+			timer -= 0.5;
 			for (double i = 0; i < 800; i++) {
 				for (double j = 0; j < 800; j++) {
 					//int value = iterator(new Complex(j/600000 +0.14, 0.5875 -(i/600000)));
