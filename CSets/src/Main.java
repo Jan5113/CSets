@@ -1,9 +1,15 @@
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -27,6 +33,9 @@ public class Main extends Application{
 	
 	private int resX = 800;
 	private int resY = 800;
+	
+	WritableImage wim = new WritableImage(resX, resY);
+	int imgcounter = 0;
 	
 
 	public static void main(String[] args) {
@@ -52,6 +61,10 @@ public class Main extends Application{
 		
 		final long startNanoTime = System.nanoTime();
 	    lastNanoTime = startNanoTime;
+	    
+	    while (new File("images/MandelbrotImage" + imgcounter + ".png").exists()) {
+	    	imgcounter++;
+	    }
 		
 		new AnimationTimer()
 	      {
@@ -74,6 +87,26 @@ public class Main extends Application{
 		System.out.println(x + " " + y);
 		
 		calcSet();
+	}
+	
+	public void nextframe() {
+		scale *= 1.05;
+		
+		calcSet();
+		
+		saveRender();
+	}
+	
+	public void saveRender() {
+		canvas.snapshot(null, wim);
+		
+		File file = new File("images/MandelbrotImage" + imgcounter + ".png");
+		imgcounter++;
+		
+		try {
+            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file);
+        } catch (Exception s) {
+        }
 	}
 	
 	public void calcSet() {
@@ -108,9 +141,7 @@ public class Main extends Application{
 	public void refreshScreen(double dt) {
 		timer += dt;
 		if (timer > 0) {
-			timer -= 0.2;
-			julia.y += 0.001;
-			calcSet();
+			timer -= 1;
 		}
 	}
 	
